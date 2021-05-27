@@ -3,7 +3,7 @@ const app = express();
 const path = require("path");
 const AtomicKafkaServer = require('atomic-kafka/server')
 
-const port = 3001;
+const port = 3002;
 
 
 app.use(express.urlencoded({ extended:true }));
@@ -27,6 +27,5 @@ const server = app.listen(port, () => {
 
 const atomicKafkaInstance = new AtomicKafkaServer(server);
 atomicKafkaInstance.newConsumer('truck-group');
-atomicKafkaInstance.socketConsume('truck-group', 'test_topic', 'newMessage');
-// atomicKafkaInstance.newProducer('test_topic');
-// atomicKafkaInstance.socketProduce('test_topic', 4000);
+atomicKafkaInstance.socketConsume('truck-group', 'test_topic_2', 'newMessage');
+
