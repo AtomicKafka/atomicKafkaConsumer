@@ -40,7 +40,7 @@ function useInterval(callback, delay) {
 function Consumer() {
   const [inv, setInv] = useState(inventory);
   const [sku, setSku] = useState({});
-  const akc = new AtomicKafkaClient("http://localhost:3001");
+  const akc = new AtomicKafkaClient("http://localhost:3002");
 
   const cb = (arg) => {
     console.log("new data: ", arg);

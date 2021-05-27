@@ -38,11 +38,12 @@ module.exports = {
   //   }),
   // ],
   devServer: {
+    port: 9002,
     historyApiFallback: true,
     publicPath: '/build', //the default port is 8080, the default webpack dev server, load static files
     proxy: {
       '/': {
-        target: 'http://localhost:3001',
+        target: 'http://localhost:3002',
         secure: false,
       }
 
