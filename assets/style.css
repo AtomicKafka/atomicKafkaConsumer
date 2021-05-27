@@ -1,0 +1,121 @@
+body {
+  /* background: #1F2833; */
+  background-image: linear-gradient(#1F2833, #0B0C10);
+  font-family: Geneva, Helvetica, sans-serif;
+  color: #C5C6C7;
+  margin: 0;
+}
+
+#header-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background: #0B0C10;
+  width: 100%;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  margin: 0;
+}
+
+#logo {
+  display: block;
+  width: 20%;
+  margin-left: 2%;
+  /* padding-right: 0.6em; */
+}
+
+#title {
+  color: #45A29E;
+  /* color: #66FCF1; */
+  /* color: #1F2833; */
+  font-size: 2.5em;
+  margin-right: 2%;
+  /* padding-left: 0.6em; */
+}
+
+h1 {
+  text-align: center;
+  font-weight: bolder;
+  font-size: 3em;
+  color: #45A29E;
+}
+
+.inv-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  background-color: #1F2833;
+  border: 3px solid #45A29E;
+  /* margin-left: 5%;
+  margin-right: 5%; */
+  margin: 0 5% 4% 5%;
+  padding-top: 2em;
+  padding-bottom: 2em;
+}
+
+.inv-li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;;
+  list-style: none;
+  /* font-size: 4em; */
+  /* margin: 0 1em; */
+}
+
+.inv-sku {
+  font-size: 3em;
+}
+
+.inv-qty {
+  font-size: 6em;
+  color: whitesmoke;
+}
+
+button {
+  font-size: 2em;
+  background-color: #0B0C10;
+  color: #66FCF1;
+  border: 2px solid #66FCF1;
+}
+
+button:hover {
+  background-color: #66FCF1;
+  color: #0B0C10;
+  border: 2px solid #0B0C10;
+}
+
+button:focus {
+  outline: none;
+  background-color: #45A29E;
+  color: #0B0C10;
+  border: 2px solid #0B0C10;
+}
+
+.sales-container {
+  margin: 0 auto;
+  width: 50%;
+  height: 25%;
+  overflow-y: scroll;
+  border: 2px dashed #C5C6C7;
+}
+
+.sales-li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  list-style: none;
+  font-size: 1.5em;
+}
+
+.order {
+  border: 1;
+  border-width: 1px;
+  border-style: solid;
+  border-color: white;
+  background-color: rgb(51, 51, 51);
+  margin-top: .35em;
+  padding: .25em;
+  border-radius: 3px;
+
+}
