@@ -13,8 +13,8 @@ const inventory: Inventory = {
   apples: 3000,
   oranges: 1700,
   truffles: 200,
-  tequila: 9000,
-  ethereum: 2400,
+  tomatoes: 9000,
+  ramps: 2400,
 }
 
 
