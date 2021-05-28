@@ -1,14 +1,22 @@
+/**
+ * Consumer.tsx renders a functional component that uses Atomic Kafka to open a websocket
+ * that will listen for any consumed messages emitted from the Kafka cluster.
+ */
+
 import React, { useState, useEffect , useRef } from "react";
-import io from "socket.io-client";
+
+//Typescript declaration for the javascript require function
 declare function require(name:string)
+//Require the client class of the Atomic Kafka package
 const AtomicKafkaClient = require('atomic-kafka/client').default
 
-// const socket = io("http://localhost:3001");
-
+//Inventory interface for the sku object
 interface Inventory {
   [SKU: string]: number
 }
 
+
+//Example inventory provided for demonstrative purposes
 const inventory: Inventory = {
   apples: 3000,
   oranges: 1700,
@@ -17,13 +25,23 @@ const inventory: Inventory = {
   ramps: 2400,
 }
 
-
+//Functional Consumer component that will receive socket emissions of Kafka messages from
+//the server side consumer instantiation
 function Consumer() {
   const [inv, setInv] = useState(inventory);
   const [sku, setSku] = useState({});
 
+  //Instantiation of the client class using the server that was also used to instantiate
+  //the server class
   const akc = new AtomicKafkaClient("http://localhost:3002");
 
+
+  /**
+   * 
+   * @param {JSON Object} arg: The function cb is a callback that will be used to update
+   * state of this functional component. This should be adjusted to whatever usecase is
+   * for state management of this or any consumer component.
+   */
   const cb = (arg) => {
     let dupe = false;
     const latest = JSON.parse(arg);
@@ -50,6 +68,13 @@ function Consumer() {
     }
   }
 
+  /**
+   * useInterval takes an anonymous function that will invoke the consumer function of the
+   * Atomic Kafka Client class and the user defined time at which to invoke the consumer function. 
+   * The consumer function will open up a socket to listen for any messages that can be consumed
+   * on the specific event name provided. This event name should match what is emited from the server consumer.
+   */
+
   akc.useInterval(() => akc.consumer('newMessage', cb), 4000);
 
 
@@ -68,7 +93,6 @@ function Consumer() {
             <li className='inv-li' key={idx}>
             <div className='inv-sku'>{`${key}`}</div>
             <div className='inv-qty'>{`${inv[key]}`}</div>
-            {/* {`${key}: ${inv[key]}`} */}
             <button onClick={() => restock(key)}>Restock</button>
             </li>
           )
