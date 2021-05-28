@@ -46,5 +46,5 @@ atomicKafkaInstance.newConsumer('truck-group');
 
 //socketConsume selects the consumer based on the group name, subscribes it to a topic,
 //and perfoms a socket emission to the event name provided by the user
-atomicKafkaInstance.socketConsume('truck-group', 'test_topic_2', 'newMessage');
+atomicKafkaInstance.socketConsume('truck-group', 'test_topic', 'newMessage');
 
