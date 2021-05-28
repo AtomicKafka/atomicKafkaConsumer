@@ -17,88 +17,41 @@ const inventory: Inventory = {
   ethereum: 2400,
 }
 
-function useInterval(callback, delay) {
-  const savedCallback = useRef(null);
-
-  // Remember the latest callback.
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-
-  // Set up the interval.
-  useEffect(() => {
-    function tick() {
-      savedCallback?.current()
-    }
-    if (delay !== null) {
-      let id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
-}
 
 function Consumer() {
   const [inv, setInv] = useState(inventory);
   const [sku, setSku] = useState({});
+
   const akc = new AtomicKafkaClient("http://localhost:3002");
 
   const cb = (arg) => {
-    console.log("new data: ", arg);
-    // console.log("data type: ", typeof arg);
-    console.log("new truck state: ", sku);
-    // if(arg.SKU === state[state.length - 1].SKU) return;
     let dupe = false;
     const latest = JSON.parse(arg);
+
     if (latest.id === undefined) {
       latest.id = "gen" + this.genId;
       this.genId++;
     }
+
     if (Object.keys(sku).length > 0) {
-      // if (state[state.length - 1].SKU === latest.SKU && state[state.length - 1].qty === latest.qty) dupe = true;
       if (latest.id in sku) dupe = true;
     }
+
     if (!dupe) {
       const newState = { ...sku };
       newState[latest.id] = latest;
       setSku(newState);
     }
-    //  setState([...state, latest]);
 
     if (inv && !dupe) {
       const newInv = { ...inv };
-      // const latest = JSON.parse(arg);
       newInv[latest.SKU] -= latest.qty;
       setInv(newInv);
     }
   }
 
-  useInterval(() => akc.consumer('newMessage', cb), 4000);
-  // useInterval(() => {
-  //   if (sku.length > 0) {
-  //     const newInv = {...inv};
-  //     const latest = JSON.parse(sku[sku.length - 1]);
-  //     console.log('sku latest: ', latest);
-  //     // const newInv = inv[latest.SKU] - latest.qty;
+  akc.useInterval(() => akc.consumer('newMessage', cb), 4000);
 
-  //     newInv[latest.SKU] -= latest.qty;
-
-  //     // const skuUpdate = latest.SKU;
-  //     // const newInv = {
-  //     //   ...inv,
-  //     //   skuUpdate : inv[latest.SKU] - latest.qty,
-  //     // }
-  //     return setInv(newInv);
-  //   }
-  // }, 4000)
-
-  // function displayInventory () {
-  //   let output = [];
-  //   for (const sku in inv) {
-  //     output.push(<li key={sku}>{`${sku}: ${inv[sku]}`}</li>);
-  //   }
-  //   return output;
-  // }
-  // const dispInv = displayInventory();
 
   function restock(sku) {
     console.log('restocking for sku: ', sku);
