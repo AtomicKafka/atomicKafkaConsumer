@@ -68,7 +68,7 @@ h1 {
 }
 
 .inv-qty {
-  font-size: 6em;
+  font-size: 4em;
   color: whitesmoke;
 }
 
@@ -118,4 +118,8 @@ button:focus {
   padding: .25em;
   border-radius: 3px;
 
+}
+
+.bar {
+  fill: red;
 }

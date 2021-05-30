@@ -3,7 +3,7 @@
  * that will listen for any consumed messages emitted from the Kafka cluster.
  */
 
-import React, { useState, useEffect , useRef } from "react";
+import React, { useState } from "react";
 
 //Typescript declaration for the javascript require function
 declare function require(name:string)
@@ -46,11 +46,6 @@ function Consumer() {
     let dupe = false;
     const latest = JSON.parse(arg);
 
-    if (latest.ID === undefined) {
-      latest.ID = this.genId;
-      this.genId++;
-    }
-
     if (Object.keys(sku).length > 0) {
       if (latest.ID in sku) dupe = true;
     }
@@ -91,6 +86,9 @@ function Consumer() {
         {Object.keys(inv).map((key, idx) => {
           return (
             <li className='inv-li' key={idx}>
+            <svg width="50" height="100">
+              <rect x={0} y={0} width={50} height={`${inv[key] / 100}`} transform='translate(50, 100) rotate(180)' fill="#66FCF1" />
+            </svg>
             <div className='inv-sku'>{`${key}`}</div>
             <div className='inv-qty'>{`${inv[key]}`}</div>
             <button onClick={() => restock(key)}>Restock</button>
