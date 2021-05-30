@@ -46,24 +46,24 @@ function Consumer() {
     let dupe = false;
     const latest = JSON.parse(arg);
 
-    if (latest.id === undefined) {
-      latest.id = "gen" + this.genId;
+    if (latest.ID === undefined) {
+      latest.ID = this.genId;
       this.genId++;
     }
 
     if (Object.keys(sku).length > 0) {
-      if (latest.id in sku) dupe = true;
+      if (latest.ID in sku) dupe = true;
     }
-
+ 
     if (!dupe) {
       const newState = { ...sku };
-      newState[latest.id] = latest;
+      newState[latest.ID] = latest;
       setSku(newState);
     }
 
     if (inv && !dupe) {
       const newInv = { ...inv };
-      newInv[latest.SKU] -= latest.qty;
+      newInv[latest.SKU] -= latest.QTY;
       setInv(newInv);
     }
   }
@@ -101,9 +101,9 @@ function Consumer() {
       <h1>New Sales (Streaming Data)</h1>
       <div className='sales-container'>
         {Object.keys(sku).map((num, idx) => {
-          let _id = sku[num].id;
+          let _id = sku[num].ID;
           let _sku = sku[num].SKU;
-          let _qty = sku[num].qty;
+          let _qty = sku[num].QTY;
           if (sku[num] !== undefined) {
             return (
               <li className='sales-li' key={idx}>
