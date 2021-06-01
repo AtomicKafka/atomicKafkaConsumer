@@ -3,7 +3,7 @@
  * that will listen for any consumed messages emitted from the Kafka cluster.
  */
 
-import React, { useState, useEffect , useRef } from "react";
+import React, { useState } from "react";
 
 //Typescript declaration for the javascript require function
 declare function require(name:string)
@@ -46,24 +46,19 @@ function Consumer() {
     let dupe = false;
     const latest = JSON.parse(arg);
 
-    if (latest.id === undefined) {
-      latest.id = "gen" + this.genId;
-      this.genId++;
-    }
-
     if (Object.keys(sku).length > 0) {
-      if (latest.id in sku) dupe = true;
+      if (latest.ID in sku) dupe = true;
     }
-
+ 
     if (!dupe) {
       const newState = { ...sku };
-      newState[latest.id] = latest;
+      newState[latest.ID] = latest;
       setSku(newState);
     }
 
     if (inv && !dupe) {
       const newInv = { ...inv };
-      newInv[latest.SKU] -= latest.qty;
+      newInv[latest.SKU] -= latest.QTY;
       setInv(newInv);
     }
   }
@@ -91,6 +86,9 @@ function Consumer() {
         {Object.keys(inv).map((key, idx) => {
           return (
             <li className='inv-li' key={idx}>
+            <svg width="50" height="100">
+              <rect x={0} y={0} width={50} height={`${inv[key] / 100}`} transform='translate(50, 100) rotate(180)' fill="#66FCF1" />
+            </svg>
             <div className='inv-sku'>{`${key}`}</div>
             <div className='inv-qty'>{`${inv[key]}`}</div>
             <button onClick={() => restock(key)}>Restock</button>
@@ -101,9 +99,9 @@ function Consumer() {
       <h1>New Sales (Streaming Data)</h1>
       <div className='sales-container'>
         {Object.keys(sku).map((num, idx) => {
-          let _id = sku[num].id;
+          let _id = sku[num].ID;
           let _sku = sku[num].SKU;
-          let _qty = sku[num].qty;
+          let _qty = sku[num].QTY;
           if (sku[num] !== undefined) {
             return (
               <li className='sales-li' key={idx}>
