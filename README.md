@@ -1,76 +1,84 @@
-# AtomicKafkaConsumer
-## Getting Started: 
-
-<br>
-
-**AtomicKafkaProducer** is a demo-consumer-app for people who want to see how [AtomicKafka](https://github.com/oslabs-beta/AtomicKafka) can be integrated into a front-end app as a consumer. There is also a [demo-producer-app](https://github.com/AtomicKafka/atomicKafkaProducer) to be paired with this demo-consumer-app. To download AtomicKafka npm package, please [click here](https://github.com/oslabs-beta/AtomicKafka). To download the demo-producer-app, please [click here](https://github.com/AtomicKafka/atomicKafkaProducer). 
-
-
-<br>
-
-----
-
-<br>
-
-### 1. Install your dependencies: 
-
-<br>
-
-```
-npm install
-```
-
-<br>
+![AtomicKafka_MastHead](./assets/logo_rect.png)
 
 ---
-### 2. Connect to Kafka Cluster:
 
+<p align="center">AtomicKafka is a lightweight <a href="https://github.com/oslabs-beta/AtomicKafka"> NPM Package </a> developed to simplify the process of establishing bidirectional, real-time data streaming with Apache Kafka in your web-app.
 <br>
+<a href="http://www.atomickafka.com/">Homepage</a><span> &nbsp; | &nbsp;</span><a href="https://github.com/oslabs-beta/AtomicKafka">Library</a><span> &nbsp; | &nbsp;</span><a href="https://github.com/AtomicKafka">Demo Apps</a><span> &nbsp; | &nbsp;</span><a href="https://medium.com/@dbehmoaras/2eb79b20eaae?source=friends_link&sk=843b83b81eb79f37f0d2b8a96ce26212">Featured on Medium</a></p>
 
-Establish your server connection first. In server.js, set up your **port**. This port will be used for express and socket.io connection (**default port is 3002**).
 
-<br>
+<p align="center">
 
-```js
-const express = require('express');
-const app = express();
-const path = require("path");
-const AtomicKafkaServer = require('atomic-kafka/server')
+  <a href="https://www.npmjs.com/package/atomic-kafka">
+    <img alt="npm" src="https://img.shields.io/npm/v/atomic-kafka?color=%2366FCF1&style=for-the-badge">
+  </a>
+  <a href="https://github.com/oslabs-beta/atomickafka/graphs/contributors">
+    <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/oslabs-beta/atomickafka?color=%2366FCF1&style=for-the-badge">
+  <a href="https://github.com/oslabs-beta/atomickafka/blob/main/LICENSE">
+    <img alt="NPM" src="https://img.shields.io/npm/l/atomic-kafka?color=%2366FCF1&style=for-the-badge">
+  </a>
+  <a href="https://github.com/oslabs-beta/atomickafka/blob/main/LICENSE">
+    <img alt="Last Commit" src="https://img.shields.io/github/last-commit/oslabs-beta/AtomicKafka?color=%2366FCF1&style=for-the-badge">
+  </a>
+  <a href="https://github.com/oslabs-beta/AtomicKafka/stargazers">
+    <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/oslabs-beta/AtomicKafka?color=%2366FCF1&style=for-the-badge">
+  </a>
+</p>
 
-const port = 3002;
-```
 
-<br>
+# **AtomicKafkaConsumer**
 
-If you decide to use a different port number, be sure to also modify Producer.tsx to establish a proper connection with the Kafka cluster (**default port is 3002**). 
+**AtomicKafkaConsumer** demonstrates a functioning standalone Consumer microservice built into a React Component. This demo app was built to be used alongside [AtomicKafkaProducer](https://github.com/AtomicKafka/atomicKafkaProducer).
 
-<br>
+If you are running the corresponding [Producer](https://github.com/AtomicKafka/atomicKafkaProducer), the Consumer will listen to the data that you produce from your producer app in real time. Try it with your colleagues by setting up a free [Confluent Cloud](https://www.confluent.io/confluent-cloud/) and sharing the ***API credentials*** with each to see how AtomicKafka integrates with the cloud!
 
-```js
-const akc = new AtomicKafkaClient('http://localhost:3002')
-```
 
-<br>
 
 ---
-### 3. Data format ###
 
-<br>
 
-The app is set up to handle data in the following format: 
-- id (unique id of the products)
-- SKU (name of the products)
-- qty (quantity of the products)
+## **Getting Started**
 
-<br>
+### **1.** Set up your Kafka service
+
+**Docker:**
+  - If using Docker, use the [.yml](https://github.com/AtomicKafka/atomicKafkaConsumer/blob/main/docker-compose.yml) file provided herein and run in the root directory of this app.
+
+    ```sh
+    docker-compose up -d
+    ```
+**Confluent Cloud:**
+  - Follow the steps on [Confluent Cloud](https://www.confluent.io/confluent-cloud/) to create a free account. Obtain the ***API_ACCESS_KEY***, ***API_ACCESS_SECRET***, and ***BOOTSTRAP_SERVER***.
+  - Note that if you already have a Kafka instance running from a docker image (e.g. from the Producer demo), you do not need to compose again.
+---
+### **2.** Configure .env file
+- Default ports are configured on the local host for the dev-server **9002** and the Kafka broker **3002**.
+- Docker .env config: (**_API_KEY_** and **_API_SECRET_** are intentionally left blank).
+  ```js
+  API_KEY=
+  API_SECRET=
+  KAFKA_BOOTSTRAP_SERVER=localhost:9092
+  ```
+- Confluent Cloud .env config:
+  ```js
+  API_KEY=<API_ACCESS_KEY>
+  API_SECRET=<API_ACCESS_SECRET>
+  KAFKA_BOOTSTRAP_SERVER=<BOOTSTRAP_SERVER>
+  ```
 
 ---
-### 4. Run your app
+### **3.** Install dependencies and build the package
+```
+$ npm install
+$ npm run build
+```
+---
 
-<br>
+### **4.** Run the dev server
 
 ```
-npm run dev
+$ npm run dev
 ```
 
-Now your consumer app will listen to your producer app and display new data in real time! 
+
+
