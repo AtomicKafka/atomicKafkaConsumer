@@ -1,4 +1,4 @@
-![AtomicKafka_MastHead](./assets/logo_rect.png)
+![AtomicKafka_MastHead](./assets/atomic-kafka-logo.png)
 
 ---
 
