@@ -1,104 +1,77 @@
-import React, { useState, useEffect , useRef } from "react";
-import io from "socket.io-client";
+/**
+ * Consumer.tsx renders a functional component that uses Atomic Kafka to open a websocket
+ * that will listen for any consumed messages emitted from the Kafka cluster.
+ */
+
+import React, { useState } from "react";
+
+//Typescript declaration for the javascript require function
 declare function require(name:string)
+//Require the client class of the Atomic Kafka package
 const AtomicKafkaClient = require('atomic-kafka/client').default
 
-// const socket = io("http://localhost:3001");
-
+//Inventory interface for the sku object
 interface Inventory {
   [SKU: string]: number
 }
 
+
+//Example inventory provided for demonstrative purposes
 const inventory: Inventory = {
   apples: 3000,
   oranges: 1700,
   truffles: 200,
-  tequila: 9000,
-  ethereum: 2400,
+  tomatoes: 9000,
+  ramps: 2400,
 }
 
-function useInterval(callback, delay) {
-  const savedCallback = useRef(null);
-
-  // Remember the latest callback.
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-
-  // Set up the interval.
-  useEffect(() => {
-    function tick() {
-      savedCallback?.current()
-    }
-    if (delay !== null) {
-      let id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
-}
-
+//Functional Consumer component that will receive socket emissions of Kafka messages from
+//the server side consumer instantiation
 function Consumer() {
   const [inv, setInv] = useState(inventory);
   const [sku, setSku] = useState({});
+
+  //Instantiation of the client class using the server that was also used to instantiate
+  //the server class
   const akc = new AtomicKafkaClient("http://localhost:3002");
 
+
+  /**
+   * 
+   * @param {JSON Object} arg: The function cb is a callback that will be used to update
+   * state of this functional component. This should be adjusted to whatever usecase is
+   * for state management of this or any consumer component.
+   */
   const cb = (arg) => {
-    console.log("new data: ", arg);
-    // console.log("data type: ", typeof arg);
-    console.log("new truck state: ", sku);
-    // if(arg.SKU === state[state.length - 1].SKU) return;
     let dupe = false;
     const latest = JSON.parse(arg);
-    if (latest.id === undefined) {
-      latest.id = "gen" + this.genId;
-      this.genId++;
-    }
+
     if (Object.keys(sku).length > 0) {
-      // if (state[state.length - 1].SKU === latest.SKU && state[state.length - 1].qty === latest.qty) dupe = true;
-      if (latest.id in sku) dupe = true;
+      if (latest.ID in sku) dupe = true;
     }
+ 
     if (!dupe) {
       const newState = { ...sku };
-      newState[latest.id] = latest;
+      newState[latest.ID] = latest;
       setSku(newState);
     }
-    //  setState([...state, latest]);
 
     if (inv && !dupe) {
       const newInv = { ...inv };
-      // const latest = JSON.parse(arg);
-      newInv[latest.SKU] -= latest.qty;
+      newInv[latest.SKU] -= latest.QTY;
       setInv(newInv);
     }
   }
 
-  useInterval(() => akc.consumer('newMessage', cb), 4000);
-  // useInterval(() => {
-  //   if (sku.length > 0) {
-  //     const newInv = {...inv};
-  //     const latest = JSON.parse(sku[sku.length - 1]);
-  //     console.log('sku latest: ', latest);
-  //     // const newInv = inv[latest.SKU] - latest.qty;
+  /**
+   * useInterval takes an anonymous function that will invoke the consumer function of the
+   * Atomic Kafka Client class and the user defined time at which to invoke the consumer function. 
+   * The consumer function will open up a socket to listen for any messages that can be consumed
+   * on the specific event name provided. This event name should match what is emited from the server consumer.
+   */
 
-  //     newInv[latest.SKU] -= latest.qty;
+  akc.useInterval(() => akc.consumer('newMessage', cb), 4000);
 
-  //     // const skuUpdate = latest.SKU;
-  //     // const newInv = {
-  //     //   ...inv,
-  //     //   skuUpdate : inv[latest.SKU] - latest.qty,
-  //     // }
-  //     return setInv(newInv);
-  //   }
-  // }, 4000)
-
-  // function displayInventory () {
-  //   let output = [];
-  //   for (const sku in inv) {
-  //     output.push(<li key={sku}>{`${sku}: ${inv[sku]}`}</li>);
-  //   }
-  //   return output;
-  // }
-  // const dispInv = displayInventory();
 
   function restock(sku) {
     console.log('restocking for sku: ', sku);
@@ -113,9 +86,11 @@ function Consumer() {
         {Object.keys(inv).map((key, idx) => {
           return (
             <li className='inv-li' key={idx}>
+            <svg width="50" height="100">
+              <rect x={0} y={0} width={50} height={`${inv[key] / 100}`} transform='translate(50, 100) rotate(180)' fill="#66FCF1" />
+            </svg>
             <div className='inv-sku'>{`${key}`}</div>
             <div className='inv-qty'>{`${inv[key]}`}</div>
-            {/* {`${key}: ${inv[key]}`} */}
             <button onClick={() => restock(key)}>Restock</button>
             </li>
           )
@@ -124,9 +99,9 @@ function Consumer() {
       <h1>New Sales (Streaming Data)</h1>
       <div className='sales-container'>
         {Object.keys(sku).map((num, idx) => {
-          let _id = sku[num].id;
+          let _id = sku[num].ID;
           let _sku = sku[num].SKU;
-          let _qty = sku[num].qty;
+          let _qty = sku[num].QTY;
           if (sku[num] !== undefined) {
             return (
               <li className='sales-li' key={idx}>
